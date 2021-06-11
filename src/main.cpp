@@ -4,7 +4,7 @@
 #include "config-env.h"
 
 #define LEDPIN 2
-#define DEBUG
+//#define DEBUG
 
 void setup_wifi();
 void reconnect();
@@ -64,11 +64,13 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.println("Data received");
-  Serial.print("Topic: ");
-  Serial.println(topic);
-  Serial.print("Payload: ");
-  Serial.println((char) payload[0]);
+  #ifdef DEBUG
+    Serial.println("Data received");
+    Serial.print("Topic: ");
+    Serial.println(topic);
+    Serial.print("Payload: ");
+    Serial.println((char) payload[0]);
+  #endif
 
   // Switch on the LED if an 1 was received as first character
   if ((char)payload[0] == '1') {
@@ -91,7 +93,7 @@ void reconnect() {
       #ifdef DEBUG
         Serial.println("OK");
       #endif
-      client.subscribe("test/led");
+      client.subscribe(MQTT_SUBSCRIBE_TOPIC);
     } else {
       #ifdef DEBUG
         Serial.print("KO, error : ");
